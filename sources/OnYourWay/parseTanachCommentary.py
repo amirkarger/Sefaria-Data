@@ -1,17 +1,29 @@
 # -*- coding: utf-8 -*-
 
+"""
+Parse OnYourWay XML file(s) and post commentary information to sefaria.org
+
+In more detail:
+* Read OnYourWay XML file(s) with tanach and one or more commentaries
+    (The tanach chapter should already be in Sefaria)
+* Create a commentary record for the commentary, if it doesn't yet exist
+* Post the commentary text
+
+Usage: python parseTanachCommentary.py [post]
+
+Without "post", it will parse but not try to post anything to sefaria.org
+"""
+
 import tools
 import sys
 
 args = sys.argv
-
 do_post = len(args) > 1 and args[1].lower() == 'post'
 
 api_key_file = "API.key"
 api_key = tools.readApiKey(api_key_file) #Add your API key
-#server = 'dev.sefaria.org'
 server = 'dev.sefaria.org'
-sourcedir = '../OnYourWay/xml'
+sourcedir = 'xml' # Assume we just unpacked the zip right in the parsing dir
 
 # Figured out by looking at the OYW app preferences, grepping for pid in 
 # xml files, then comparing dibur hamatchils with the ones in the app
@@ -61,13 +73,11 @@ books = [
 ]
 
 # TEST TRANSLATIONS
-commentary_names = { 7: 'Baal HaTurim' } # OVERRIDE
+commentary_names = { 7: 'Baal HaTurim' } # OVERRIDE to do just one commentary
 #commentary_names = { 8: 'Or HaChayim' } # OVERRIDE
-sourcedir = "."
-books = [['Genesis', 'Genesis_First_Two']]
+#books = [['Genesis', 'Genesis_First_Two']] # OVERRIDE to do just one book
+#sourcedir = "." # OVERRIDE source directory
 #tools.parseText("./Genesis_First_Two.xml", "Genesis", commentary_names, display=False)
-#tools.parseText("./short.xml", "Genesis", commentary_names, display=False)
-#tools.parseText("./Full_Berishit_OYW.xml", "Genesis", commentary_names, display=False)
 #import sys; sys.exit()
 
 for book in books:
